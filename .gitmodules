@@ -1,0 +1,3 @@
+[submodule "grouperg-flyimg"]
+	path = grouperg-flyimg
+	url = git@github.com:kiboko-labs/grouperg-flyimg.git

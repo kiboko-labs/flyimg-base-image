@@ -1,4 +1,4 @@
-FROM php:7.1-fpm-stretch
+FROM php:7.2-fpm-stretch
 
 MAINTAINER sadoknet@gmail.com
 ENV DEBIAN_FRONTEND=noninteractive
@@ -18,9 +18,7 @@ RUN \
 #opcache
 RUN docker-php-ext-install opcache
 
-#xdebug
-RUN pecl install xdebug imagick yaml-2.0.0 && \
-    echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20160303/xdebug.so" > /usr/local/etc/php/conf.d/xdebug.ini && \
+RUN pecl install imagick yaml-2.0.0 && \
     echo "extension=imagick.so" > /usr/local/etc/php/conf.d/imagick.ini && \
     echo "extension=yaml.so" > /usr/local/etc/php/conf.d/yaml.ini && \
     echo "expose_php=off" > /usr/local/etc/php/conf.d/expose_php.ini
@@ -62,6 +60,25 @@ ENV PORT 80
 
 COPY resources/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
+
+RUN rm -rf /var/www/html/*
+
+COPY grouperg-flyimg/bin/ /var/www/html/bin/
+COPY grouperg-flyimg/config/ /var/www/html/config/
+COPY grouperg-flyimg/public/ /var/www/html/public/
+COPY grouperg-flyimg/src/ /var/www/html/src/
+COPY grouperg-flyimg/templates/ /var/www/html/templates/
+COPY grouperg-flyimg/composer.json /var/www/html/composer.json
+COPY grouperg-flyimg/composer.lock /var/www/html/composer.lock
+COPY grouperg-flyimg/symfony.lock /var/www/html/symfony.lock
+
+RUN echo 'APP_ENV="dev"' >/var/www/html/.env \
+    && echo 'APP_SECRET="b713788cc9b60cfb9f0230ef846c6ebe"' >> /var/www/html/.env
+
+RUN chmod +x /var/www/html/bin/console
+
+RUN cd /var/www/html/ \
+    && composer install
 
 WORKDIR /var/www/html
 

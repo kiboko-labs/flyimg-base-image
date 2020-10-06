@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
 
-sed -i 's/$PORT/'"$PORT"'/g' /etc/nginx/conf.d/flyimage.conf
+sed -i 's/$PORT/'"$PORT"'/g' /etc/nginx/conf.d/kloudimg.conf
 
 exec docker-php-entrypoint "$@"
