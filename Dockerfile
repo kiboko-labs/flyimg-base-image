@@ -78,7 +78,7 @@ RUN echo 'APP_ENV="dev"' >/var/www/html/.env \
 RUN chmod +x /var/www/html/bin/console
 
 RUN cd /var/www/html/ \
-    && composer install
+    && composer install # --no-dev --optimize-autoloader
 
 WORKDIR /var/www/html
 
